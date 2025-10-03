@@ -24,9 +24,9 @@
   <main>
     <section class="carousel">
       <img src="imagenes/computacion-en-la-nube.webp" alt="computacion-en-la-nube" class="active" />
-      <img src="imagenes/Seguridad.png" alt="Seguridad"  />
+      <img src="imagenes/Seguridad.png" alt="Seguridad" />
       <img src="imagenes/soporte.jpg" alt="soporte" />
-      <img src="imagenes/servicios.jpg" alt="soporte" />
+      <img src="imagenes/servicios.jpg" alt="servicios" />
     </section>
 
     <section class="contacto">
@@ -37,12 +37,12 @@
         <textarea name="message" placeholder="Tu mensaje" required></textarea>
         <button type="submit">Enviar por correo</button>
       </form>
+      <div id="responseMessage" class="mensaje-respuesta"></div>
 
       <a href="https://wa.me/50584896806?text=Hola%20TecnoRed,%20quiero%20más%20información%20sobre%20sus%20servicios" target="_blank" class="whatsapp-btn">
-  <img src="imagenes/WhatsApp.svg.webp" alt="WhatsApp" class="whatsapp-icon" />
-  Escríbenos por WhatsApp
-</a>
-      
+        <img src="imagenes/WhatsApp.svg.webp" alt="WhatsApp" class="whatsapp-icon" />
+        Escríbenos por WhatsApp
+      </a>
     </section>
   </main>
 
@@ -59,6 +59,7 @@
       e.preventDefault();
       const formData = new FormData(this);
       const data = Object.fromEntries(formData.entries());
+      const msgBox = document.getElementById("responseMessage");
 
       try {
         const res = await fetch("/send", {
@@ -68,32 +69,28 @@
         });
 
         const result = await res.json();
-        alert(result.message);
-        this.reset();
+        msgBox.textContent = result.message;
+        msgBox.style.color = result.success ? "green" : "red";
+        if (result.success) this.reset();
       } catch (error) {
-        alert("Hubo un error al enviar el mensaje.");
+        msgBox.textContent = "⚠️ Hubo un error al enviar el mensaje.";
+        msgBox.style.color = "red";
       }
     });
-  </script>
 
-<script>
-  const images = document.querySelectorAll('.carousel img');
-  let current = 0;
+    const images = document.querySelectorAll('.carousel img');
+    let current = 0;
 
-  function showNextImage() {
-    images[current].classList.remove('active');
-    current = (current + 1) % images.length;
+    function showNextImage() {
+      images[current].classList.remove('active');
+      current = (current + 1) % images.length;
+      images[current].classList.add('active');
+    }
+
     images[current].classList.add('active');
-  }
-
-  // Mostrar la primera imagen al cargar
-  images[current].classList.add('active');
-
-  // Cambiar imagen cada 4 segundos
-  setInterval(showNextImage, 4000);
-</script>
-
-
+    setInterval(showNextImage, 4000);
+  </script>
 </body>
 </html>
+
 
