@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TecnoRed | Soluciones TIC</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <div class="logo-area">
+      <img src="imagenes/logo.jpg" alt="Logo TecnoRed" class="logo" />
+      <h1>TecnoRed</h1>
+    </div>
+    <nav>
+      <button onclick="openTab('quienes.html')">Quiénes Somos</button>
+      <button onclick="openTab('mision.html')">Misión</button>
+      <button onclick="openTab('vision.html')">Visión</button>
+      <button onclick="openTab('catalogo.html')">Catálogo</button>
+      <button onclick="openTab('garantia.html')">Garantías</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="carousel">
+      <img src="imagenes/computacion-en-la-nube.webp" alt="computacion-en-la-nube" class="active" />
+      <img src="imagenes/Seguridad.png" alt="Seguridad" />
+      <img src="imagenes/soporte.jpg" alt="soporte" />
+      <img src="imagenes/servicios.jpg" alt="servicios" />
+    </section>
+
+    <section class="contacto">
+      <h2>Contáctanos</h2>
+      <form id="contactForm">
+        <input type="text" name="name" placeholder="Tu nombre" required />
+        <input type="email" name="email" placeholder="Tu correo electrónico" required />
+        <textarea name="message" placeholder="Tu mensaje" required></textarea>
+        <button type="submit">Enviar por correo</button>
+      </form>
+      <div id="responseMessage" class="mensaje-respuesta"></div>
+
+      <a href="https://wa.me/50584896806?text=Hola%20TecnoRed,%20quiero%20más%20información%20sobre%20sus%20servicios" target="_blank" class="whatsapp-btn">
+        <img src="imagenes/WhatsApp.svg.webp" alt="WhatsApp" class="whatsapp-icon" />
+        Escríbenos por WhatsApp
+      </a>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 TecnoRed. Todos los derechos reservados.</p>
+  </footer>
+
+  <script>
+    function openTab(url) {
+      window.open(url, '_blank');
+    }
+
+    document.getElementById("contactForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      const data = Object.fromEntries(formData.entries());
+      const msgBox = document.getElementById("responseMessage");
+
+      try {
+        const res = await fetch("/send", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+        msgBox.textContent = result.message;
+        msgBox.style.color = result.success ? "green" : "red";
+        if (result.success) this.reset();
+      } catch (error) {
+        msgBox.textContent = "⚠️ Hubo un error al enviar el mensaje.";
+        msgBox.style.color = "red";
+      }
+    });
+
+    const images = document.querySelectorAll('.carousel img');
+    let current = 0;
+
+    function showNextImage() {
+      images[current].classList.remove('active');
+      current = (current + 1) % images.length;
+      images[current].classList.add('active');
+    }
+
+    images[current].classList.add('active');
+    setInterval(showNextImage, 4000);
+  </script>
+</body>
+</html>
+
+
